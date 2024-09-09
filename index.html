@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Chore Chart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffeaf5;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            color: #333;
+            font-size: 16px;
+        }
+        h1, h2, h3 {
+            font-family: 'Fredoka One', cursive;
+            text-align: center;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { font-size: 2.5em; }
+        h2 { font-size: 2em; }
+        h3 { font-size: 1.5em; }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            table-layout: fixed;
+        }
+        th, td {
+            border: none;
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: 'Nunito', sans-serif;
+        }
+        th {
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .chore-column {
+            background-color: #ffb3ba;
+            width: 20%;
+            text-align: left;
+            padding: 15px;
+        }
+        .day-column {
+            width: 11%;
+        }
+        .day-0 { background-color: #ff9aa2; }
+        .day-1 { background-color: #ffdac1; }
+        .day-2 { background-color: #ffffa5; }
+        .day-3 { background-color: #b5ead7; }
+        .day-4 { background-color: #c7ceea; }
+        .day-5 { background-color: #e2d1f9; }
+        .day-6 { background-color: #ff9aa2; }
+        
+        .chore-button, .reset-chore-button, #addChoreButton, .admin-button, .bonus-button, .purchase-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka One', cursive;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .chore-button {
+            background-color: #ff69b4;
+        }
+        .chore-button:hover, #addChoreButton:hover, .bonus-button:hover, .purchase-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .chore-button.completed {
+            background-color: #8fd9a8;
+        }
+        .reset-chore-button {
+            background-color: #ff6b6b;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        .reset-chore-button:hover {
+            background-color: #ff4757;
+        }
+        #addChoreButton, .bonus-button {
+            background-color: #4CAF50;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        .admin-button {
+            background-color: #4a90e2;
+            font-size: 0.9em;
+            margin: 0 2px;
+        }
+        .admin-button:hover {
+            background-color: #3a7bc8;
+        }
+        .purchase-button {
+            background-color: #9b59b6;
+            font-size: 0.9em;
+            margin: 0 2px;
+        }
+        .purchase-button:hover {
+            background-color: #8e44ad;
+        }
+        #totalScore {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            color: #ff69b4;
+            font-family: 'Fredoka One', cursive;
+        }
+        #bonusSection, #bonusLog, #storeSection, #storeHistory {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chore-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            color: #ff69b4;
+        }
+        .chore-points {
+            font-size: 1.5em;
+            color: #4CAF50;
+            font-family: 'Fredoka One', cursive;
+            margin-bottom: 10px;
+        }
+        input[type="number"], input[type="text"] {
+            font-family: 'Nunito', sans-serif;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            padding: 5px;
+            font-size: 14px;
+        }
+        label {
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            color: #ff69b4;
+        }
+        p, li {
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        #storeSection h2, #bonusSection h2 {
+            color: #ff69b4;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+
+        #storeSection p, #bonusSection p {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            background-color: #fff0f5;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        #storeSection .item-name, #bonusSection .bonus-note {
+            font-family: 'Fredoka One', cursive;
+            color: #ff69b4;
+            font-size: 1.2em;
+        }
+
+        #storeSection .item-cost, #bonusSection .bonus-points {
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        #bonusLog h3, #storeHistory h3 {
+            color: #4a90e2;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        #bonusLog ul, #storeHistory ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #bonusLog li, #storeHistory li {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1em;
+            margin-bottom: 8px;
+            background-color: #f0f8ff;
+            padding: 8px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        #bonusLog .log-date, #storeHistory .purchase-date {
+            font-family: 'Fredoka One', cursive;
+            color: #4a90e2;
+            font-size: 0.9em;
+        }
+
+        #bonusLog .log-note, #storeHistory .purchase-item {
+            font-weight: bold;
+            color: #ff69b4;
+        }
+
+        #bonusLog .log-points, #storeHistory .purchase-cost {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .sparkle {
+            display: inline-block;
+            animation: sparkle 1.5s infinite alternate;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        #adminPanel {
+            background-color: #fff0f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #adminPanel h2, #adminPanel h3 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        #adminPanel ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #adminPanel li {
+            margin-bottom: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chore-column {
+            background-color: #ffb3ba;
+            width: 20%;
+            text-align: left;
+            padding: 15px;
+        }
+
+        .chore-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1em;
+        }
+
+        .chore-points {
+            font-size: 0.9em;
+            color: #666;
+            font-family: 'Nunito', sans-serif;
+            margin-bottom: 5px;
+        }
+
+        .chore-column .admin-button {
+            font-size: 0.8em;
+            padding: 5px 10px;
+            margin-top: 5px;
+        }
+
+        #adminPanel {
+            background-color: #fff0f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #adminPanel h2, #adminPanel h3 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        #adminPanel button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌈 Julie's Chore Chart 🦄</h1>
+    <div>
+        <label for="adminMode">Admin Mode:</label>
+        <input type="checkbox" id="adminMode" onchange="toggleAdminMode()">
+    </div>
+    <div id="adminPanel" style="display: none;"></div>
+    <table id="choreChart">
+        <!-- Chores will be added here dynamically -->
+    </table>
+    
+    <div id="totalScore">Total Score: 0</div>
+    
+    <div id="bonusSection"></div>
+    <div id="bonusLog"></div>
+    <div id="storeSection"></div>
+    <div id="storeHistory"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
